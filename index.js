@@ -47,6 +47,6 @@ app.use("/", contactUSRoutes);
 app.use("/", promoCodeRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/", offlineUserRoutes);
-app.listen(5000,()=> {
+app.listen(process.env.PORT || 5000,()=> {
     console.log("Started at 5000");
 })
