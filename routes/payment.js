@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
 const feesBharo = require("../models/feesBharo");
 const Transaction = require("../models/transaction");
 const PromoCode = require("../models/promoCode");
-
+require('dotenv').config();
 router.post("/:event_id", (req,res) => {
     const {event_id} = req.params;
     const {specialEvent, promo} = req.body;
@@ -393,5 +393,37 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
     });
     return mail_sent;
   };
+
+  router.get('/razorpay', async (req, res) => {
+	const payment_capture = 1
+	const amount = 1
+	const currency = 'INR'
+    console.log("called")
+    const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    })
+	const options = {
+		amount: amount * 100,
+		currency,
+        payment_capture
+	}
+
+	try {
+		const response = await razorpay.orders.create(options)
+		console.log(response)
+		res.json({
+			id: response.id,
+			currency: response.currency,
+			amount: response.amount
+		})
+	} catch (error) {
+        res.status(400).json({errMessage: error})
+		console.log(error)
+	}
+})
+
+
+
 
 module.exports = router;
