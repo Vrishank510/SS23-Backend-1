@@ -1,10 +1,11 @@
 var express = require("express");
 var router = express.Router();
 const Event = require("../models/event");
-const User = require("../models/user");
+const User = require("../models/oauthUser");
+const register = require("../models/Registartion");
 const Razorpay = require('razorpay');
 const { isSignedIn } = require("../controllers/auth");
-const { check, validationResult } = require("express-validator");
+const { check, validationResult, body } = require("express-validator");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 // const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
@@ -12,7 +13,7 @@ const feesBharo = require("../models/feesBharo");
 const Transaction = require("../models/transaction");
 const PromoCode = require("../models/promoCode");
 require('dotenv').config();
-router.post("/:event_id", (req,res) => {
+router.post("", (req,res) => {
     const {event_id} = req.params;
     const {specialEvent, promo} = req.body;
     if(specialEvent === 1){
@@ -403,26 +404,74 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET
     })
+
 	const options = {
 		amount: amount * 100,
 		currency,
         payment_capture
 	}
-
 	try {
 		const response = await razorpay.orders.create(options)
-		console.log(response)
+		console.log(response,"response")
 		res.json({
 			id: response.id,
 			currency: response.currency,
 			amount: response.amount
 		})
 	} catch (error) {
+        console.log(error )
         res.status(400).json({errMessage: error})
-		console.log(error)
 	}
 })
 
+
+router.post("/register" ,async (req,res)=>{
+    console.log(req.body)
+const {
+    name , email , mobile , gender, college , level ,   
+    regDay1,
+    regDay2,
+    regDay3,
+    accomDay1,
+    accomDay2,
+    accomDay3 ,} = req.body.formData
+    const{razorpay_order_id , razorpay_payment_id , razorpay_signature} = req.body.razorpay_request_data
+
+const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET ).update(razorpay_order_id + '|' + razorpay_payment_id).digest('hex');
+    if(razorpay_signature !== expectedSignature){
+        return res.status(400).json({
+            error: "Payment failed",
+            paymentSuccess :false
+        });
+    }
+
+let user = await User.findOne({email :email })
+
+if(!user) res.sendStatus(404).json({errMessage : "User not found"})
+const update = {
+   name,
+   email,
+   mobile,
+   college,
+   gender,
+   level,
+   paidForRegDay1:regDay1,
+   paidForRegDay2:regDay2,
+   paidForRegDay3:regDay3,
+   paidForAccomodationDay1:accomDay1,
+   paidForAccomodationDay2:accomDay2,
+   paidForAccomodationDay3:accomDay3,
+}
+let userRegister = await register.exists({email})
+if(!userRegister) userRegister = await register.create(update)
+else{
+ userRegister =await register.findOneAndUpdate({email:email},update , {
+    new : true
+} ) 
+}
+console.log(userRegister)
+res.send({registrationDetails : userRegister , paymentSuccess : true})
+})
 
 
 

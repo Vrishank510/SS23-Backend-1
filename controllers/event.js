@@ -1,5 +1,5 @@
 const Event = require("../models/event");
-const User = require("../models/user");
+const User = require("../models/Registartion");
 // const Logger = require("../models/logger");
 const { check, validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");

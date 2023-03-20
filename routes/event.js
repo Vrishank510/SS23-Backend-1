@@ -5,7 +5,7 @@ const { isSignedIn } = require("../controllers/auth");
 const { getAllEvents, addEvent, register_event, getQRCode, checkQRCode, getRegisteredEvents } = require("../controllers/event");
 const upload = require("../utils/upload");
 const feesBharo = require("../models/feesBharo");
-const User = require("../models/user");
+const User = require("../models/Registartion");
 
 router.get("/event/all", getAllEvents);
 router.post("/event/add", upload.single("poster") , addEvent);

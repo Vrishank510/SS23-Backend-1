@@ -1,4 +1,4 @@
-const User = require("../models/oauthUser");
+const oauthUser = require("../models/oauthUser");
 // const Logger = require("../models/logger");
 const { check, validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
@@ -7,15 +7,18 @@ require("dotenv").config();
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { default: fetch } = require("node-fetch");
-const axios = require("axios")
-exports.getUser = (req, res) => {
-  const id = req.auth._id;
-  User.findById(id, (err, user) => {
-    if (err || !user) {
-      return res.status(400).json({ message: "Couldn't find user" });
-    }
-    return res.json(user);
-  });
+const axios = require("axios");
+const Registartion = require("../models/Registartion");
+exports.getUser = async(req, res) => {
+  const email = req.params.email;
+  try{
+    let registartion = await Registartion.findOne({email: email})
+    res.send({details : registartion})
+  }catch(err){
+    res.send({errMessage: err})
+  }
+  
+
 }
 
 exports.signup = (req, res) => {
@@ -109,7 +112,7 @@ exports.signin = (req, res) => {
 
 exports.Oauth = async (req, res) => {
   const { googleAccessToken } = req.body;
-  console.log("called")
+  console.log("called",googleAccessToken)
   fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
     headers: {
       "Authorization": `Bearer ${googleAccessToken}`,
@@ -117,16 +120,30 @@ exports.Oauth = async (req, res) => {
     }
   }).then(async (response) => {
     const data = await response.json()
-
     const firstName = data.given_name;
     const lastName = data.family_name;
     const email = data.email;
     const picture = data.picture;
-    let user = await User.findOne({ email })
-    if (!user) {
-      user = await User.create({ email, firstName, lastName, profilePicture: picture })
+    let user = await oauthUser.findOne({ email })
+    let register = await Registartion.findOne({email})
+    if (!user && !register) {
+      let college = ""
+      const name = firstName + " "+lastName
+      if(email.split('@')[1] === 'student.nitw.ac.in'){
+        college="NitW"
+      }
+     register= await Registartion.create({email,name,college})
+      user = await oauthUser.create({ email, firstName, lastName, profilePicture: picture })
+    }else if(user && !register){
+      let college = ""
+      const name = firstName + " "+lastName
+      if(email.split('@')[1] === 'student.nitw.ac.in'){
+        college="NitW"
+      }
+      register= await Registartion.create({email,name,college})
     }
-    console.log(user)
+
+    console.log(user , register)
     const token = jwt.sign({
       email: user.email,
       id: user._id
@@ -136,6 +153,7 @@ exports.Oauth = async (req, res) => {
     .status(200)
     .json({user, token})
   }).catch((err) => {
+    console.log(err)
     res.status(400).json({message: "Invalid access token!"})
   })
 }

@@ -29,7 +29,7 @@ router.get("/signout", signout);
 
 router.post("/verifyEmail", isSignedIn, verifyEmail);
 router.get("/sendMail", isSignedIn, sendMail);
-router.get("/user/profile", isSignedIn, getUser);
+router.get("/user/:email", getUser);
 router.post('/resetPasswordRequest',requestPasswordReset);
 router.post('/resetPassword/:id',resetPassword);
 
