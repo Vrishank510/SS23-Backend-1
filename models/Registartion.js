@@ -19,7 +19,8 @@ const RegisterSchema = new Schema({
     },
     college : {
         type: String,
-        required: false
+        required: false,
+        default : "0"
     },
     gender : {
         type: String,
