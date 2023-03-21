@@ -11,8 +11,14 @@ const axios = require("axios");
 const Registartion = require("../models/Registartion");
 exports.getUser = async(req, res) => {
   const email = req.params.email;
+  console.log(email);
   try{
     let registartion = await Registartion.findOne({email: email})
+    if(!registartion){
+      return res.status(400).json({
+        error: "USER email does not exists",
+      });
+    }
     res.send({details : registartion})
   }catch(err){
     res.send({errMessage: err})
@@ -124,23 +130,27 @@ exports.Oauth = async (req, res) => {
     const lastName = data.family_name;
     const email = data.email;
     const picture = data.picture;
-    let user = await oauthUser.findOne({ email })
-    let register = await Registartion.findOne({email})
+    let user = await oauthUser.exists({ email })
+    let register = await Registartion.exists({email})
     if (!user && !register) {
-      let college = ""
-      const name = firstName + " "+lastName
+      let college = "0"
+      const name = firstName + " "+ lastName
       if(email.split('@')[1] === 'student.nitw.ac.in'){
         college="NitW"
+        register= await Registartion.create({email,name,college, paidForAccomodationDay1: 1, paidForAccomodationDay2: 1, paidForAccomodationDay3: 1, paidForProshow1: 1, paidForProshow2: 1, paidForProshow3: 1, paidForRegDay1: 1, paidForRegDay2: 1, paidForRegDay3: 1})
+      } else{
+        register= await Registartion.create({email, name, college})
       }
-     register= await Registartion.create({email,name,college})
       user = await oauthUser.create({ email, firstName, lastName, profilePicture: picture })
     }else if(user && !register){
-      let college = ""
-      const name = firstName + " "+lastName
+      let college = "0"
+      const name = firstName + " " + lastName
       if(email.split('@')[1] === 'student.nitw.ac.in'){
         college="NitW"
+        register= await Registartion.create({email,name,college, paidForAccomodationDay1: 1, paidForAccomodationDay2: 1, paidForAccomodationDay3: 1, paidForProshow1: 1, paidForProshow2: 1, paidForProshow3: 1, paidForRegDay1: 1, paidForRegDay2: 1, paidForRegDay3: 1})
+      } else{
+        register= await Registartion.create({email,name,college})
       }
-      register= await Registartion.create({email,name,college})
     }
 
     console.log(user , register)

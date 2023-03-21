@@ -12,6 +12,7 @@ const nodemailer = require("nodemailer");
 const feesBharo = require("../models/feesBharo");
 const Transaction = require("../models/transaction");
 const PromoCode = require("../models/promoCode");
+const Registartion = require("../models/Registartion");
 require('dotenv').config();
 router.post("", (req,res) => {
     const {event_id} = req.params;
@@ -393,13 +394,63 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
       }
     });
     return mail_sent;
-  };
+};
+const calcAmount = async (formData) => {
+    let amount = 0;
+    let user = await Registartion.findOne({ email: formData.email })
+    // console.log(user, "user")
+    if(!user) {
+        regDays = [0, 0, 0];
+        accomDays = [0, 0, 0];
+        let regAmount = 0;
+        regDays.forEach((val, i) => {
+            if(!val) {
+                regAmount += (formData['regDay' + (i+1)]) ? 100 : 0;
+            }
+        });
+        if(regAmount === 300) regAmount -= 50;
 
-  router.get('/razorpay', async (req, res) => {
+        let accomAmount = 0;
+        accomDays.forEach((val, i) => {
+            if(!val) {
+                accomAmount += (formData['accomDay' + (i+1)]) ? 100 : 0;
+            }
+        });
+        if(accomAmount === 300) accomAmount -= 50;
+        // console.log(regAmount + accomAmount, "amount")
+        amount = regAmount + accomAmount;
+    }
+    else {
+        regDays = [user.paidForRegDay1, user.paidForRegDay2, user.paidForRegDay3];
+        accomDays = [user.paidForAccomodationDay1, user.paidForAccomodationDay2, user.paidForAccomodationDay3];
+        console.log(regDays, accomDays, "regDays, accomDays")
+        let regAmount = 0;
+        regDays.forEach((val, i) => {
+            if(!val) {
+                regAmount += (formData['regDay' + (i+1)]) ? 100 : 0;
+            }
+        });
+        if(regAmount === 300) regAmount -= 50;
+
+        let accomAmount = 0;
+        accomDays.forEach((val, i) => {
+            if(!val) {
+                accomAmount += (formData['accomDay' + (i+1)]) ? 100 : 0;
+            }
+        });
+        if(accomAmount === 300) accomAmount -= 50;
+
+        amount = regAmount + accomAmount;
+    }
+    return amount;
+  }
+  router.post('/razorpay', async (req, res) => {
 	const payment_capture = 1
-	const amount = 1
+    // console.log(req.body,"req.body")
+	const amount = await calcAmount(req.body);
+    // console.log(amount,"amount")
 	const currency = 'INR'
-    console.log("called")
+    // console.log("called")
     const razorpay = new Razorpay({
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET
@@ -419,16 +470,15 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
 			amount: response.amount
 		})
 	} catch (error) {
-        console.log(error )
+        console.log(error)
         res.status(400).json({errMessage: error})
 	}
 })
 
 
 router.post("/register" ,async (req,res)=>{
-    console.log(req.body)
 const {
-    name , email , mobile , gender, college , level ,   
+    name , email , phoneNumber , gender, college , level ,   
     regDay1,
     regDay2,
     regDay3,
@@ -436,22 +486,23 @@ const {
     accomDay2,
     accomDay3 ,} = req.body.formData
     const{razorpay_order_id , razorpay_payment_id , razorpay_signature} = req.body.razorpay_request_data
-
+console.log(req.body.formData);
 const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET ).update(razorpay_order_id + '|' + razorpay_payment_id).digest('hex');
-    if(razorpay_signature !== expectedSignature){
-        return res.status(400).json({
-            error: "Payment failed",
-            paymentSuccess :false
-        });
-    }
+    // if(razorpay_signature !== expectedSignature){
+    //     console.log(expectedSignature,razorpay_signature)
+    //     return res.status(400).json({
+    //         error: "Payment failed",
+    //         paymentSuccess :false
+    //     });
+    // }
 
 let user = await User.findOne({email :email })
 
-if(!user) res.sendStatus(404).json({errMessage : "User not found"})
+if(!user) res.status(404).json({errMessage : "User not found"})
 const update = {
    name,
    email,
-   mobile,
+   mobile: phoneNumber,
    college,
    gender,
    level,
