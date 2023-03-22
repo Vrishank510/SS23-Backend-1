@@ -7,13 +7,11 @@ require("dotenv").config();
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { default: fetch } = require("node-fetch");
-const axios = require("axios");
 const Registartion = require("../models/Registartion");
 exports.getUser = async(req, res) => {
   const email = req.params.email;
-  console.log(email);
   try{
-    let registartion = await Registartion.findOne({email: email})
+    let registartion = await Registartion.findOne({email})
     if(!registartion){
       return res.status(400).json({
         error: "USER email does not exists",
@@ -118,7 +116,6 @@ exports.signin = (req, res) => {
 
 exports.Oauth = async (req, res) => {
   const { googleAccessToken } = req.body;
-  console.log("called",googleAccessToken)
   fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
     headers: {
       "Authorization": `Bearer ${googleAccessToken}`,
@@ -130,11 +127,11 @@ exports.Oauth = async (req, res) => {
     const lastName = data.family_name;
     const email = data.email;
     const picture = data.picture;
-    let user = await oauthUser.exists({ email })
-    let register = await Registartion.exists({email})
+    let user = await oauthUser.findOne({ email })
+    let register = await Registartion.findOne({email})
     if (!user && !register) {
       let college = "0"
-      const name = firstName + " "+ lastName
+      const name = firstName + " " + lastName
       if(email.split('@')[1] === 'student.nitw.ac.in'){
         college="NitW"
         register= await Registartion.create({email,name,college, paidForAccomodationDay1: 1, paidForAccomodationDay2: 1, paidForAccomodationDay3: 1, paidForProshow1: 1, paidForProshow2: 1, paidForProshow3: 1, paidForRegDay1: 1, paidForRegDay2: 1, paidForRegDay3: 1})
@@ -153,15 +150,9 @@ exports.Oauth = async (req, res) => {
       }
     }
 
-    console.log(user , register)
-    const token = jwt.sign({
-      email: user.email,
-      id: user._id
-    }, "anything", { expiresIn: "7d" })
-
     res
     .status(200)
-    .json({user, token})
+    .json({user})
   }).catch((err) => {
     console.log(err)
     res.status(400).json({message: "Invalid access token!"})

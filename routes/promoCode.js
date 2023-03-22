@@ -32,7 +32,6 @@ router.post("/checkValidity", (req,res) => {
         });
     }
     const {promo} = req.body;
-
     const len = promo.length;
     if(len <= 7){
         PromoCode.findOne({code:promo}, (err, promocode)=>{
