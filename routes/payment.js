@@ -395,10 +395,9 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
     });
     return mail_sent;
 };
-const calcAmount = async (formData) => {
+const calcAmount = async ({formData}) => {
     let amount = 0;
     let user = await Registartion.findOne({ email: formData.email })
-    // console.log(user, "user")
     if(!user) {
         regDays = [0, 0, 0];
         accomDays = [0, 0, 0];
@@ -413,10 +412,9 @@ const calcAmount = async (formData) => {
         let accomAmount = 0;
         accomDays.forEach((val, i) => {
             if(!val) {
-                accomAmount += (formData['accomDay' + (i+1)]) ? 100 : 0;
+                accomAmount += (formData['accomDay' + (i+1)]) ? 250 : 0;
             }
         });
-        if(accomAmount === 300) accomAmount -= 50;
         // console.log(regAmount + accomAmount, "amount")
         amount = regAmount + accomAmount;
     }
@@ -434,20 +432,20 @@ const calcAmount = async (formData) => {
         let accomAmount = 0;
         accomDays.forEach((val, i) => {
             if(!val) {
-                accomAmount += (formData['accomDay' + (i+1)]) ? 100 : 0;
+                accomAmount += (formData['accomDay' + (i+1)]) ? 250 : 0;
             }
         });
-        if(accomAmount === 300) accomAmount -= 50;
 
         amount = regAmount + accomAmount;
+    }
+    if(formData.code !== '' && formData.code !== undefined) {
+        amount = amount - (amount * formData.code.value / 100);
     }
     return amount;
   }
   router.post('/razorpay', async (req, res) => {
 	const payment_capture = 1
-    // console.log(req.body,"req.body")
 	const amount = await calcAmount(req.body);
-    // console.log(amount,"amount")
 	const currency = 'INR'
     // console.log("called")
     const razorpay = new Razorpay({
@@ -485,13 +483,13 @@ const {
     accomDay3 ,} = req.body.formData
     const{razorpay_order_id , razorpay_payment_id , razorpay_signature} = req.body.razorpay_request_data
 const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET ).update(razorpay_order_id + '|' + razorpay_payment_id).digest('hex');
-    // if(razorpay_signature !== expectedSignature){
-    //     console.log(expectedSignature,razorpay_signature)
-    //     return res.status(400).json({
-    //         error: "Payment failed",
-    //         paymentSuccess :false
-    //     });
-    // }
+    if(razorpay_signature !== expectedSignature){
+        console.log(expectedSignature,razorpay_signature)
+        return res.status(400).json({
+            error: "Payment failed",
+            paymentSuccess :false
+        });
+    }
 
 let user = await User.findOne({email :email })
 
@@ -509,10 +507,12 @@ const update = {
    paidForAccomodationDay1:accomDay1,
    paidForAccomodationDay2:accomDay2,
    paidForAccomodationDay3:accomDay3,
+   codes : [req.body.formData.code.code]
 }
-let userRegister = await register.exists({email})
+let userRegister = await register.findOne({email})
 if(!userRegister) userRegister = await register.create(update)
 else{
+update.codes = [...userRegister.codes , req.body.formData.code.code];
  userRegister =await register.findOneAndUpdate({email:email},update , {
     new : true
 } ) 
