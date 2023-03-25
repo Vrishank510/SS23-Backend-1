@@ -93,6 +93,10 @@ const RegisterSchema = new Schema({
       type: Array,
       default: [],
     },
+    codes : {
+        type: Array,
+        default: [],
+    }
 },
 { timestamps: true }
 )

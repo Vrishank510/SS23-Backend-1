@@ -32,11 +32,11 @@ router.post("/checkValidity", (req,res) => {
         });
     }
     const {promo} = req.body;
-
     const len = promo.length;
     if(len <= 7){
         PromoCode.findOne({code:promo}, (err, promocode)=>{
             if (err || !promocode) {
+                console.log(err);
                 return res.status(400).json({ message: "Invalid Promo Code"});
             }
             if(promocode.count <= 0){
@@ -70,5 +70,5 @@ router.post("/checkValidity", (req,res) => {
     }
     
 });
-
+  
 module.exports = router;
