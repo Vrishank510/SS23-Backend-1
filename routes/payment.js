@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const Event = require("../models/event");
 const User = require("../models/oauthUser");
-const register = require("../models/Registartion");
+const register = require("../models/Registration");
 const Razorpay = require('razorpay');
 const { isSignedIn } = require("../controllers/auth");
 const { check, validationResult, body } = require("express-validator");
@@ -12,7 +12,7 @@ const nodemailer = require("nodemailer");
 const feesBharo = require("../models/feesBharo");
 const Transaction = require("../models/transaction");
 const PromoCode = require("../models/promoCode");
-const Registartion = require("../models/Registartion");
+const Registartion = require("../models/Registration");
 require('dotenv').config();
 router.post("", (req,res) => {
     const {event_id} = req.params;
@@ -298,7 +298,7 @@ router.post("/store/details", (req, res) => {
 
 });
 
-const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") => {
+const sendMail =  (email, name, razorpay_payment_id="", registration_fee="", text="") => {
     var transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -307,7 +307,7 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
       },
     });
     var mailOptions = {
-      from: `SpringSpree 22 <webdev@springspree.in>`,
+      from: `SpringSpree 2023 <webdev@springspree.nitw.in>`,
       to: email,
       subject: `You have successfully registered for ${name}`,
       text: "",
@@ -317,7 +317,7 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
         <div style="color: white;   padding: 1rem auto;   display: flex;   justify-content: center;">
           <img style="margin: 1rem auto;   width: 150px;"
             src="${process.env.HOST}/static/ss22.jpeg"
-            alt="SpringSpree22"
+            alt="SpringSpree23"
           />
         </div>
         <div style="padding: 0 2rem;   text-align: left;   font-family: "Clash Display", sans-serif;   color: white;">
@@ -362,18 +362,18 @@ const sendMail =  (email, name, razorpay_payment_id, registration_fee, text="") 
               NIT Warangal<br />
     
               Contact Us:
-              <a style="color: white;" style="color: white" href="webdev@springspree.in"
-                >webdev@springspree.in</a
+              <a style="color: white;" style="color: white" href="springspree@nitw.ac.in"
+                >springspree@nitw.ac.in</a
               >
     
               <p style="margin-top: 0.3rem !important;">
                 Visit us on
-                <a style="color: white;" href="https://springspree22.in" target="blank"> Our Website </a> |
+                <a style="color: white;" href="https://springspree.nitw.in" target="blank"> Our Website </a> |
                 <a style="color: white;" href="https://instagram.com/springspree_nitw?utm_medium=copy_link" target="blank"
                   >Instagram</a
                 >
                 |
-                <a style="color: white;" href="https://m.facebook.com/SpringSpree22" target="blank">
+                <a style="color: white;" href="https://m.facebook.com/nitw.springspree" target="blank">
                   Facebook
                 </a>
               </p>
@@ -400,7 +400,7 @@ const calcAmount = async ({formData}) => {
     let user = await Registartion.findOne({ email: formData.email })
     if(!user) {
         regDays = [0, 0, 0];
-        accomDays = [0, 0, 0];
+        accomDays = [0, 0, 0, 0];
         let regAmount = 0;
         regDays.forEach((val, i) => {
             if(!val) {
@@ -412,7 +412,7 @@ const calcAmount = async ({formData}) => {
         let accomAmount = 0;
         accomDays.forEach((val, i) => {
             if(!val) {
-                accomAmount += (formData['accomDay' + (i+1)]) ? 250 : 0;
+                accomAmount += (formData['accomDay' + (i)]) ? 250 : 0;
             }
         });
         // console.log(regAmount + accomAmount, "amount")
@@ -420,7 +420,7 @@ const calcAmount = async ({formData}) => {
     }
     else {
         regDays = [user.paidForRegDay1, user.paidForRegDay2, user.paidForRegDay3];
-        accomDays = [user.paidForAccomodationDay1, user.paidForAccomodationDay2, user.paidForAccomodationDay3];
+        accomDays = [user.paidForAccomodationDay0, user.paidForAccomodationDay1, user.paidForAccomodationDay2, user.paidForAccomodationDay3];
         let regAmount = 0;
         regDays.forEach((val, i) => {
             if(!val) {
@@ -432,7 +432,7 @@ const calcAmount = async ({formData}) => {
         let accomAmount = 0;
         accomDays.forEach((val, i) => {
             if(!val) {
-                accomAmount += (formData['accomDay' + (i+1)]) ? 250 : 0;
+                accomAmount += (formData['accomDay' + (i)]) ? 250 : 0;
             }
         });
 
@@ -474,13 +474,18 @@ const calcAmount = async ({formData}) => {
 
 router.post("/register" ,async (req,res)=>{
 const {
-    name , email , phoneNumber , gender, college , level ,   
+    name , email , phoneNumber , gender, college , level ,   referralId,
     regDay1,
     regDay2,
     regDay3,
+    accomDay0,
     accomDay1,
     accomDay2,
-    accomDay3 ,} = req.body.formData
+    accomDay3,
+} = req.body.formData;
+
+    console.log(req.body.formData);
+
     const{razorpay_order_id , razorpay_payment_id , razorpay_signature} = req.body.razorpay_request_data
 const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET ).update(razorpay_order_id + '|' + razorpay_payment_id).digest('hex');
     if(razorpay_signature !== expectedSignature){
@@ -491,9 +496,14 @@ const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_S
         });
     }
 
-let user = await User.findOne({email :email })
+let user = await User.findOne({email :email });
+console.log(user);
 
-if(!user) res.status(404).json({errMessage : "User not found"})
+if(!user) {
+    console.log("no user found");
+    res.status(404).json({errMessage : "User not found"});
+
+}
 const update = {
    name,
    email,
@@ -501,22 +511,24 @@ const update = {
    college,
    gender,
    level,
+   referralId,
    paidForRegDay1:regDay1,
    paidForRegDay2:regDay2,
    paidForRegDay3:regDay3,
+   paidForAccomodationDay0:accomDay0,
    paidForAccomodationDay1:accomDay1,
    paidForAccomodationDay2:accomDay2,
    paidForAccomodationDay3:accomDay3,
    codes : [req.body.formData.code.code]
 }
-let userRegister = await register.findOne({email})
+let userRegister = await register.findOne({email});
 if(!userRegister) userRegister = await register.create(update)
 else{
-update.codes = [...userRegister.codes , req.body.formData.code.code];
- userRegister =await register.findOneAndUpdate({email:email},update , {
-    new : true
-} ) 
+    console.log("else condition");
+    update.codes = [...userRegister.codes , req.body.formData.code.code];
+    userRegister =await register.findOneAndUpdate({email:email},update) 
 }
+sendMail(userRegister.email,userRegister.name);
 res.send({registrationDetails : userRegister , paymentSuccess : true})
 })
 

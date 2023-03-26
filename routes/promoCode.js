@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const { check, validationResult } = require("express-validator");
 const PromoCode = require("../models/promoCode");
-const User = require("../models/Registartion");
+const User = require("../models/Registration");
 
 
 router.post("/addPromoCode", (req, res) => {

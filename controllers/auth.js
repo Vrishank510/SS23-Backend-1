@@ -7,17 +7,19 @@ require("dotenv").config();
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { default: fetch } = require("node-fetch");
-const Registartion = require("../models/Registartion");
+const Registration = require("../models/Registration");
+const generateUniqueIdAndCheck = require('../utils/generateId');
+
 exports.getUser = async(req, res) => {
   const email = req.params.email;
   try{
-    let registartion = await Registartion.findOne({email})
-    if(!registartion){
+    let registration = await Registration.findOne({email})
+    if(!Registration){
       return res.status(400).json({
         error: "USER email does not exists",
       });
     }
-    res.send({details : registartion})
+    res.send({details : registration})
   }catch(err){
     res.send({errMessage: err})
   }
@@ -123,30 +125,32 @@ exports.Oauth = async (req, res) => {
     }
   }).then(async (response) => {
     const data = await response.json()
-    const firstName = data.given_name;
-    const lastName = data.family_name;
+    const firstName = data.given_name ? data.given_name : '';
+    const lastName = data.family_name ? data.family_name : '';
     const email = data.email;
     const picture = data.picture;
     let user = await oauthUser.findOne({ email })
-    let register = await Registartion.findOne({email})
+    let register = await Registration.findOne({email})
     if (!user && !register) {
-      let college = "0"
+      let uniqueId = await generateUniqueIdAndCheck();
+      let college = "0";
       const name = firstName + " " + lastName
       if(email.split('@')[1] === 'student.nitw.ac.in'){
-        college="NitW"
-        register= await Registartion.create({email,name,college, paidForAccomodationDay1: 1, paidForAccomodationDay2: 1, paidForAccomodationDay3: 1, paidForProshow1: 1, paidForProshow2: 1, paidForProshow3: 1, paidForRegDay1: 1, paidForRegDay2: 1, paidForRegDay3: 1})
+        college="NITW"
+        register= await Registration.create({uniqueId,email,name,college, gender:'', referralId:'', paidForAccomodationDay0: 1, paidForAccomodationDay1: 1, paidForAccomodationDay2: 1, paidForAccomodationDay3: 1, paidForProshow1: 1, paidForProshow2: 1, paidForProshow3: 1, paidForRegDay1: 1, paidForRegDay2: 1, paidForRegDay3: 1})
       } else{
-        register= await Registartion.create({email, name, college})
+        register= await Registration.create({uniqueId,email, name, college, gender:'', referralId:''})
       }
       user = await oauthUser.create({ email, firstName, lastName, profilePicture: picture })
     }else if(user && !register){
+      let uniqueId = await generateUniqueIdAndCheck();
       let college = "0"
       const name = firstName + " " + lastName
       if(email.split('@')[1] === 'student.nitw.ac.in'){
-        college="NitW"
-        register= await Registartion.create({email,name,college, paidForAccomodationDay1: 1, paidForAccomodationDay2: 1, paidForAccomodationDay3: 1, paidForProshow1: 1, paidForProshow2: 1, paidForProshow3: 1, paidForRegDay1: 1, paidForRegDay2: 1, paidForRegDay3: 1})
+        college="NITW"
+        register= await Registration.create({uniqueId, email,name,college, gender:'', referralId:'', paidForAccomodationDay0: 1, paidForAccomodationDay1: 1, paidForAccomodationDay2: 1, paidForAccomodationDay3: 1, paidForProshow1: 1, paidForProshow2: 1, paidForProshow3: 1, paidForRegDay1: 1, paidForRegDay2: 1, paidForRegDay3: 1})
       } else{
-        register= await Registartion.create({email,name,college})
+        register= await Registration.create({uniqueId,email,name,college,gender:'', referralId:'',})
       }
     }
 

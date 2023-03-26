@@ -3,6 +3,10 @@ const Schema = mongoose.Schema
 
 
 const RegisterSchema = new Schema({
+    uniqueId : {
+        type:String,
+        required : true,
+    },
     email: {
         type: String,
         required: true,
@@ -38,6 +42,13 @@ const RegisterSchema = new Schema({
         type: Number,
         default: 0
     },
+
+    //reg no. of the student who referred
+    referralId : {
+        type:String,
+        required : false
+    },
+
     //changed to boolean
     paidForInaugural : {
         type: Number,
@@ -56,7 +67,10 @@ const RegisterSchema = new Schema({
         type: Number,
         default: 0
     }, 
-    
+    paidForAccomodationDay0 : {
+        type: Number,
+        default: 0
+    },
     paidForAccomodationDay1 : {
         type: Number,
         default: 0
@@ -100,8 +114,6 @@ const RegisterSchema = new Schema({
 },
 { timestamps: true }
 )
-
-
 
 
 
