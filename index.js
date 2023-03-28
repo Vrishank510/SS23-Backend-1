@@ -16,6 +16,7 @@ const eventRoutes = require("./routes/event");
 const paymentRoutes = require("./routes/payment");
 const contactUSRoutes = require("./routes/contactUs");
 const promoCodeRoutes = require("./routes/promoCode");
+const filters = require("./routes/filters");
 
 mongoose
   .connect(process.env.DATABASE, {
@@ -27,18 +28,18 @@ mongoose
     console.log("DB CONNECTED");
   });
 
-  app.use(express.json());
-  app.use(cookieParser());
- 
- app.use(cors())
-  app.use('/static',express.static('media'));
-  app.use(bodyParser.urlencoded({ extended: false }))
-  
-app.get("/addEvent", (req, res)=>{
-    res.render("addEvent",{});
+app.use(express.json());
+app.use(cookieParser());
+
+app.use(cors())
+app.use('/static', express.static('media'));
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.get("/addEvent", (req, res) => {
+  res.render("addEvent", {});
 })
-app.get("/addPromoCode", (req, res)=>{
-  res.render("addPromoCode",{});
+app.get("/addPromoCode", (req, res) => {
+  res.render("addPromoCode", {});
 })
 // app.use(expressJWT({ secret: process.env.SECRET ,algorithms: ['sha1', 'RS256', 'HS256'],}).unless({ path: ['/', '/login', '/wutangclan'] }));
 app.use("/", authRoutes);
@@ -47,6 +48,8 @@ app.use("/", contactUSRoutes);
 app.use("/", promoCodeRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/", offlineUserRoutes);
-app.listen(process.env.PORT || 5000,()=> {
-    console.log("Started at 5000");
+app.use("/filters", filters);
+
+app.listen(process.env.PORT || 5000, () => {
+  console.log("Started at 5000");
 })
