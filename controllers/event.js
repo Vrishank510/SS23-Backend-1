@@ -5,6 +5,7 @@ const { check, validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
 var expressJwt = require("express-jwt");
 const nodemailer = require("nodemailer");
+const uploadToCloudinary = require("../utils/cloudinaryUpload");
 
 exports.getAllEvents = (req, res) => {
     const errors = validationResult(req);
@@ -51,7 +52,7 @@ exports.getAllEvents = (req, res) => {
     });
 };
 
-exports.addEvent = (req, res) => {
+exports.addEvent = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({
@@ -71,14 +72,17 @@ exports.addEvent = (req, res) => {
       mimetype =  req.file.mimetype;
     }
     // console.log(path);
-    if(path!==""){
-        path = path.replace(/^\s+|\s+$/g, '');
-        path = path.replace(/\s\s+/g, '_');
-        path = path.replace(/ /g, '_');
-      path = `${process.env.HOST}/static/` + path.substring(6);
-    }
+    // if(path!==""){
+    //     path = path.replace(/^\s+|\s+$/g, '');
+    //     path = path.replace(/\s\s+/g, '_');
+    //     path = path.replace(/ /g, '_');
+    //     path = `${process.env.HOST}/static/` + path.substring(6);
+    // }
     let path1 = path.replace(/\\/g, "/");
-    fields["poster"] = path1;
+
+    const result = await uploadToCloudinary(path1)
+
+    fields["poster"] = result.url;
     const event = new Event(fields);
     event.save((err,e)=>{
         if (err) {

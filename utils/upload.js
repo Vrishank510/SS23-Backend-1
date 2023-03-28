@@ -50,3 +50,24 @@ storage: multer.diskStorage({
 });
 
 module.exports = upload;
+
+
+// const express = require('express')
+// const multer  = require('multer')
+
+// const app = express()
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, './uploads')
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.originalname)
+//     }
+// })
+// const upload = multer({ storage: storage })
+
+// app.use(express.static(__dirname + '/public'));
+// app.use('/uploads', express.static('uploads'));
+
+// module.exports = upload;

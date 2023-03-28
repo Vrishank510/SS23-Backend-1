@@ -78,12 +78,28 @@ const EventSchema = new Schema({
     poster: {
         type: String,
     },
-    start_date : {
+    day_one_start_date : {
         type: Date,
         // required: true
     },
-    end_date : {
+    day_one_duration : {
+        type: Number,
+        // required : true
+    },
+    day_two_start_date : {
         type: Date,
+        // required: true
+    },
+    day_two_duration : {
+        type: Number,
+        // required : true
+    },
+    day_three_start_date : {
+        type: Date,
+        // required: true
+    },
+    day_three_duration : {
+        type: Number,
         // required : true
     },
     registered_users : {

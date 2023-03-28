@@ -1,94 +1,129 @@
-
-<h5 style="font-weight: 700;" class="card-title">Create Event</h5>
-<form action="/event/add" method="POST" enctype="multipart/form-data" class="validated-form" novalidate>
-    <div class="mb-3">
-        <label class="form-label" for="name">Name *:</label>
-        <input required class="form-control" type="text" name="name" id="name" required>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="venue">Venue *:</label>
-        <input required class="form-control" type="text" name="venue" id="venue">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="summary">Summary :</label>
-        <input required class="form-control" type="text" name="summary" id="summary">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="event_manager">Event Manager *:</label>
-        <textarea id="event_manager" name="event_manager"></textarea>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="registration_fee">Registration Fee *:</label>
-        <input required class="form-control" type="number" name="registration_fee" id="registration_fee">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="rounds">Rounds :</label>
-        <input required class="form-control" type="number" name="rounds" id="rounds">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="prize_money">Prize Money :</label>
-        <textarea id="prize_money" name="prize_money"></textarea>    
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="no_of_prizes">no_of_prizes :</label>
-        <input required class="form-control" type="number" name="no_of_prizes" id="no_of_prizes">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="social_media">social_media :</label>
-        <textarea id="social_media" name="social_media"></textarea>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="description">Description *:</label>
-        <textarea id="description" name="description"></textarea>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="structure">structure :</label>
-        <textarea id="structure" name="structure"></textarea>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="rules">Rules :</label>
-        <textarea id="rules" name="rules"></textarea>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" for="disqualification">Disqualification :</label>
-        <textarea id="disqualification" name="disqualification"></textarea>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="judging_criteria">judging_criteria :</label>
-        <textarea id="judging_criteria" name="judging_criteria"></textarea>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label class="form-label" for="category">category :</label>
-        <textarea id="category" name="category"></textarea>
-    </div>
-    <br>
-    <div class="mb-3">
-        <label for="poster">Select a file:</label>
-        <input type="file" id="poster" name="poster">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label for="start_date">Start Date(date and time):</label>
-        <input type="datetime-local" id="start_date" name="start_date">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label for="start_date">End Date(date and time):</label>
-        <input type="datetime-local" id="end_date" name="end_date">
-    </div>
-    <br>
-    <button class="btn btn-success">Submit</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tiny.cloud/1/plbuk5tlw7ahg6w82p93if386atn4jnl4ml4lsxmekk1wm70/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+    <!-- add event  -->
+    <h5 style="font-weight: 700;" class="card-title">Create Event</h5>
+    <form action="/event/add" method="POST" enctype="multipart/form-data" class="validated-form" novalidate>
+        <div class="mb-3">
+            <label class="form-label" for="name">Name *:</label>
+            <input required class="form-control" type="text" name="name" id="name" required>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="venue">Venue *:</label>
+            <input required class="form-control" type="text" name="venue" id="venue">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="summary">Summary :</label>
+            <input required class="form-control" type="text" name="summary" id="summary">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="event_manager">Event Manager *:</label>
+            <textarea id="event_manager" name="event_manager"></textarea>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="registration_fee">Registration Fee *:</label>
+            <input required class="form-control" type="number" name="registration_fee" id="registration_fee">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="rounds">Rounds :</label>
+            <input required class="form-control" type="number" name="rounds" id="rounds">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="prize_money">Prize Money :</label>
+            <textarea id="prize_money" name="prize_money"></textarea>    
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="no_of_prizes">no_of_prizes :</label>
+            <input required class="form-control" type="number" name="no_of_prizes" id="no_of_prizes">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="social_media">social_media :</label>
+            <textarea id="social_media" name="social_media"></textarea>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="description">Description *:</label>
+            <textarea id="description" name="description"></textarea>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="structure">structure :</label>
+            <textarea id="structure" name="structure"></textarea>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="rules">Rules :</label>
+            <textarea id="rules" name="rules"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="disqualification">Disqualification :</label>
+            <textarea id="disqualification" name="disqualification"></textarea>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="judging_criteria">judging_criteria :</label>
+            <textarea id="judging_criteria" name="judging_criteria"></textarea>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label" for="category">category :</label>
+            <textarea id="category" name="category"></textarea>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="poster">Select a file:</label>
+            <input type="file" id="poster" name="poster">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="day_one_start_date">Day 1 Start Date(date and time):</label>
+            <input type="datetime-local" id="day_one_start_date" name="day_one_start_date">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="day_one_duration">Day 1 Duration:</label>
+            <input type="number" id="day_one_duration" name="day_one_duration">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="day_two_start_date">Day 2 Start Date(date and time):</label>
+            <input type="datetime-local" id="day_two_start_date" name="day_two_start_date">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="day_two_duration">Day 2 Duration:</label>
+            <input type="number" id="day_two_duration" name="day_two_duration">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="day_three_start_date">Day 3 Start Date(date and time):</label>
+            <input type="datetime-local" id="day_three_start_date" name="day_three_start_date">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="day_three_duration">Day 3 Duration:</label>
+            <input type="number" id="day_three_duration" name="day_three_duration">
+        </div>
+        <br>
+        <button class="btn btn-success">Submit</button>
+    </form>
+    <script>
+        tinymce.init({
+        selector: 'textarea',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        });
+    </script>
+</body>
+</html>
