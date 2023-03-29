@@ -17,6 +17,8 @@ const paymentRoutes = require("./routes/payment");
 const contactUSRoutes = require("./routes/contactUs");
 const promoCodeRoutes = require("./routes/promoCode");
 const filters = require("./routes/filters");
+const team = require("./routes/team");
+const sponsor = require("./routes/sponsor");
 
 mongoose
   .connect(process.env.DATABASE, {
@@ -49,6 +51,8 @@ app.use("/", promoCodeRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/", offlineUserRoutes);
 app.use("/filters", filters);
+app.use("/team", team);
+app.use("/sponsor", sponsor);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("Started at 5000");

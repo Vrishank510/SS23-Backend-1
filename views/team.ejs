@@ -1,0 +1,46 @@
+<style>
+    .mb-3 {
+        margin-bottom: 20px;
+    }
+</style>
+
+
+<h1> Team </h1>
+
+<form action="/team/add" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label class="form-label" for="name">Name *:</label>
+        <input required class="form-control" type="text" name="name" id="name" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="name">Student Mail*:</label>
+        <input required class="form-control" type="text" name="email" id="name" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="name">Phone *:</label>
+        <input required class="form-control" type="text" name="phone" id="name" required>
+    </div>
+    <div class="mb-3">
+        <label for="department">Department:</label>
+
+        <select name="department" id="department">
+            <option value="Web Development">Web Development</option>
+            <option value="Design & Decoration">Design and Decoration</option>
+            <option value="Event Conduction & Co-ordination">Event Conduction & Co-ordination</option>
+            <option value="Treasury and Pricing ">Treasury and Pricing</option>
+            <option value="Logistics & Security">Logistics & Security</option>
+            <option value="Publicity & Media Relation">Publicity & Media Relation</option>
+            <option value="Sponsorship & Public Relations">Sponsorship & Public Relations</option>
+            <option value="Hospitality & Transportations">Hospitality & Transportations</option>
+            <option value="Quality & Control Management">Quality & Control Management</option>
+            <option value="Blogging">Blogging</option>
+            <option value="Pro-shows">Pro-shows</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="photo">Photo *:</label>
+        <input required class="form-control" type="file" name="photo" id="photo" required>
+    </div>
+
+    <button type="sumbit"> SUBMIT </button>
+</form>

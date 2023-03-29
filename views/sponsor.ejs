@@ -1,0 +1,28 @@
+<style>
+    .mb-3 {
+        margin-bottom: 20px;
+    }
+</style>
+
+<h1> Sponsors </h1>
+
+<form action="/sponsor/add" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label class="form-label" for="name">Name *:</label>
+        <input required class="form-control" type="text" name="name" id="name" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="name">Link *:</label>
+        <input required class="form-control" type="text" name="link" id="link" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="name">Sponsor Type *:</label>
+        <input required class="form-control" type="text" name="type" id="type" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="photo">Photo *:</label>
+        <input required class="form-control" type="file" name="photo" id="photo" required>
+    </div>
+
+    <button type="sumbit"> SUBMIT </button>
+</form>
