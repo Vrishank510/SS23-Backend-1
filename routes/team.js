@@ -15,7 +15,7 @@ router.post("/add", upload.single("photo"), async (req, res) => {
         const team = req.body;
         const email = team.email;
 
-        const user = await Team.find({ email });
+        const user = await Team.findOne({ email });
 
         // console.log(req.file);
         let path = "";
