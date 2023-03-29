@@ -11,7 +11,6 @@ router.get("/", (req, res) => {
 
 router.post("/add", upload.single("photo"), async (req, res) => {
     try {
-
         const sponsor = req.body;
 
         let path = "";
