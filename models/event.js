@@ -78,7 +78,7 @@ const EventSchema = new Schema({
     poster: {
         type: String,
     },
-    day_one_start_date : {
+    day_one_start_time : {
         type: Date,
         // required: true
     },
@@ -86,7 +86,7 @@ const EventSchema = new Schema({
         type: Number,
         // required : true
     },
-    day_two_start_date : {
+    day_two_start_time : {
         type: Date,
         // required: true
     },
@@ -94,7 +94,7 @@ const EventSchema = new Schema({
         type: Number,
         // required : true
     },
-    day_three_start_date : {
+    day_three_start_time : {
         type: Date,
         // required: true
     },

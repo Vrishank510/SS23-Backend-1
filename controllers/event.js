@@ -7,6 +7,18 @@ var expressJwt = require("express-jwt");
 const nodemailer = require("nodemailer");
 const uploadToCloudinary = require("../utils/cloudinaryUpload");
 
+
+const changeFormat = (datetime) =>{
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'GMT'
+  };
+  if(datetime===undefined || datetime===null) return "";
+  datetime = datetime.toLocaleString('en-UK',options);
+  return datetime;
+}
+
 exports.getAllEvents = (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -43,11 +55,24 @@ exports.getAllEvents = (req, res) => {
             key : event.key,
             hide : event.hide,
             category : event.category,
-            start_date : event.start_date,
-            end_date : event.end_date
+            // start_date : event.start_date,
+            // end_date : event.end_date
+            schedule: {
+              day1: {
+                starttime: changeFormat(event.day_one_start_time),
+                duration: event.day_one_duration
+              },
+              day2: {
+                starttime: changeFormat(event.day_two_start_time),
+                duration: event.day_two_duration
+              },
+              day3: {
+                starttime: changeFormat(event.day_three_start_time),
+                duration: event.day_three_duration
+              }
+            },
           }
         })
-        
         return res.json(events);
     });
 };
