@@ -399,15 +399,8 @@ const calcAmount = async ({ formData }) => {
     let amount = 0;
     let user = await Registartion.findOne({ email: formData.email })
     if (!user) {
-        regDays = [0, 0, 0];
         accomDays = [0, 0, 0, 0];
-        let regAmount = 0;
-        regDays.forEach((val, i) => {
-            if (!val) {
-                regAmount += (formData['regDay' + (i + 1)]) ? 100 : 0;
-            }
-        });
-        if (regAmount === 300) regAmount -= 50;
+        let regAmount = 350;
 
         let accomAmount = 0;
         accomDays.forEach((val, i) => {
@@ -419,15 +412,8 @@ const calcAmount = async ({ formData }) => {
         amount = regAmount + accomAmount;
     }
     else {
-        regDays = [user.paidForRegDay1, user.paidForRegDay2, user.paidForRegDay3];
         accomDays = [user.paidForAccomodationDay0, user.paidForAccomodationDay1, user.paidForAccomodationDay2, user.paidForAccomodationDay3];
-        let regAmount = 0;
-        regDays.forEach((val, i) => {
-            if (!val) {
-                regAmount += (formData['regDay' + (i + 1)]) ? 100 : 0;
-            }
-        });
-        if (regAmount === 300) regAmount -= 50;
+        let regAmount = (user.paidForRegDay1 || user.paidForRegDay2 || user.paidForRegDay3) ? 0 : 350;
 
         let accomAmount = 0;
         accomDays.forEach((val, i) => {
@@ -475,9 +461,7 @@ router.post('/razorpay', async (req, res) => {
 router.post("/register", async (req, res) => {
     const {
         name, email, phoneNumber, gender, college, level, referralId,
-        regDay1,
-        regDay2,
-        regDay3,
+        reg,
         accomDay0,
         accomDay1,
         accomDay2,
@@ -497,7 +481,6 @@ router.post("/register", async (req, res) => {
     }
 
     let user = await User.findOne({ email: email });
-    console.log(user);
 
     if (!user) {
         console.log("no user found");
@@ -512,9 +495,9 @@ router.post("/register", async (req, res) => {
         gender,
         level,
         referralId,
-        paidForRegDay1: regDay1,
-        paidForRegDay2: regDay2,
-        paidForRegDay3: regDay3,
+        paidForRegDay1: reg,
+        paidForRegDay2: reg,
+        paidForRegDay3: reg,
         paidForAccomodationDay0: accomDay0,
         paidForAccomodationDay1: accomDay1,
         paidForAccomodationDay2: accomDay2,
@@ -524,7 +507,6 @@ router.post("/register", async (req, res) => {
     let userRegister = await register.findOne({ email });
     if (!userRegister) userRegister = await register.create(update)
     else {
-        console.log("else condition");
         update.codes = [...userRegister.codes, req.body.formData.code.code];
         userRegister = await register.findOneAndUpdate({ email: email }, update)
     }
