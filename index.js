@@ -60,7 +60,7 @@ if (process.env.ADMIN) {
   app.get("/user/:email", getUser);
   app.post("oauth", Oauth);
 
-  app.get("/sponsor/getAll",) // TODO
+  app.get("/sponsor/getAll", sponsor.getAll)
   app.get("/team/all", team.getAll);
   app.get('/payment', paymentRoutes)
 }
