@@ -19,4 +19,11 @@ const teamSchema = mongoose.Schema({
 });
 
 const Team = mongoose.model('Team', teamSchema);
+const collection = Team.collection;
+
+Team.findTeams = async function () {
+    return await collection.findOne({ name: 'allTeamsList' })
+        .then(x => x.teams);
+}
+
 module.exports = Team;
