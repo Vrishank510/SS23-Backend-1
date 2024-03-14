@@ -47,4 +47,19 @@ router.post("/add", upload.single("photo"), async (req, res) => {
     }
 })
 
+
+const getAll = async (req, res) => {
+    try {
+        const sponsors = await Sponsor.find();
+         console.log(sponsors);
+         res.json(sponsors);
+    } catch (err) {
+        console.log(err);
+        res.send("server error");
+    }
+}
+router.get("/getAll", getAll)
+
 module.exports = router;
+module.exports.getAll = getAll;
+
