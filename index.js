@@ -7,13 +7,6 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const authRoutes = require("./routes/auth");
-const offlineUserRoutes = require("./routes/offlineUser");
-const eventRoutes = require("./routes/event");
-const paymentRoutes = require("./routes/payment");
-const contactUSRoutes = require("./routes/contactUs");
-const promoCodeRoutes = require("./routes/promoCode");
-const filters = require("./routes/filters");
 const team = require("./routes/team");
 const sponsor = require("./routes/sponsor");
 const { getUser, Oauth } = require("./controllers/auth");
@@ -43,26 +36,14 @@ if (process.env.ADMIN) {
     res.render("addPromoCode", {});
   })
   
-  app.set('views', path.join(__dirname, 'views'))
-  app.set('view engine', 'ejs')
-  // app.use(expressJWT({ secret: process.env.SECRET ,algorithms: ['sha1', 'RS256', 'HS256'],}).unless({ path: ['/', '/login', '/wutangclan'] }));
-  app.use("/", authRoutes);
-  app.use("/", eventRoutes);
-  app.use("/", contactUSRoutes);
-  app.use("/", promoCodeRoutes);
-  app.use("/payment", paymentRoutes);
-  app.use("/", offlineUserRoutes);
-  app.use("/filters", filters);
-  app.use("/team", team);
-  app.use("/sponsor", sponsor);
+  app.set('views', path.join(__dirname, 'views'));
 } else {
   // really sorry for this lol
   app.get("/user/:email", getUser);
-  app.post("oauth", Oauth);
+  app.post("/oauth", Oauth);
 
-  app.get("/sponsor/getAll", sponsor.getAll)
-  app.get("/team/all", team.getAll);
-  app.get('/payment', paymentRoutes)
+  app.get("/sponsor", sponsor.getAll)
+  app.get("/team", team.getAll);
 }
 app.listen(process.env.PORT || 5000, () => {
   console.log("Started at 5000");
