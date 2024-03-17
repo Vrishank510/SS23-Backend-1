@@ -17,6 +17,7 @@ const filters = require("./routes/filters");
 const team = require("./routes/team");
 const sponsor = require("./routes/sponsor");
 const { getUser, Oauth } = require("./controllers/auth");
+const events = require("./routes/events");
 
 mongoose
   .connect(process.env.DATABASE, {
