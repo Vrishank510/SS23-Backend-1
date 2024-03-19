@@ -4,7 +4,7 @@
     }
 </style>
 
-<h1> Sponsors </h1>
+<h1> Events </h1>
 
 <form action="/admin/event/add" method="post" enctype="multipart/form-data">
     <div class="mb-3">
@@ -16,12 +16,20 @@
         <input required class="form-control" type="text" name="link" id="link" required>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="name">Sponsor Type *:</label>
-        <input required class="form-control" type="text" name="type" id="type" required>
+        <label class="form-label" for="name">Description *:</label>
+        <input required class="form-control" type="text" name="desc" id="desc" required>
     </div>
     <div class="mb-3">
         <label class="form-label" for="photo">Photo *:</label>
         <input required class="form-control" type="file" name="photo" id="photo" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="name">type *:</label>
+        <input required class="form-control" type="text" name="type" id="type" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="name">venue *:</label>
+        <input required class="form-control" type="text" name="venue" id="venue" required>
     </div>
 
     <button type="sumbit"> SUBMIT </button>

@@ -41,6 +41,7 @@ if (process.env.ADMIN) {
   app.set('views', path.join(__dirname, 'views'));
   app.use('/admin/sponsor', sponsor);
   app.use('/admin/team', team);
+  app.use('/admin/event', events);
 } else {
   // really sorry for this lol
   app.get("/api/user/:email", getUser);
@@ -48,6 +49,7 @@ if (process.env.ADMIN) {
 
   app.get("/api/sponsor", sponsor.getAll)
   app.get("/api/team", team.getAll);
+  app.get("/api/event", events.getAll);
 }
 app.listen(process.env.PORT || 5000, () => {
   console.log("Started at 5000");
