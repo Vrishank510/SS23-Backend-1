@@ -4,8 +4,7 @@
     }
 </style>
 
-
-<h1> Team </h1>
+<h1> Events </h1>
 
 <form action="/admin/team/add" method="post" enctype="multipart/form-data">
     <div class="mb-3">
@@ -13,34 +12,10 @@
         <input required class="form-control" type="text" name="name" id="name" required>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="name">Student Mail*:</label>
-        <input required class="form-control" type="text" name="email" id="name" required>
+        <label class="form-label" for="name">Chairman</label>
+        <input required class="form-control" type="text" name="chairman" id="chairman" required>
     </div>
-    <div class="mb-3">
-        <label class="form-label" for="name">Phone *:</label>
-        <input required class="form-control" type="text" name="phone" id="name" required>
-    </div>
-    <div class="mb-3">
-        <label for="department">Department:</label>
-
-        <select name="department" id="department">
-            <option value="Web Development">Web Development</option>
-            <option value="Design and Decoration">Design and Decoration</option>
-            <option value="Event Conduction and Co-ordination">Event Conduction & Co-ordination</option>
-            <option value="Treasury and Pricing ">Treasury and Pricing</option>
-            <option value="Logistics and Security">Logistics & Security</option>
-            <option value="Publicity and Media Relation">Publicity & Media Relation</option>
-            <option value="Sponsorship and Public Relations">Sponsorship & Public Relations</option>
-            <option value="Hospitality and Transportations">Hospitality & Transportations</option>
-            <option value="Quality and Control Management">Quality & Control Management</option>
-            <option value="Blogging">Blogging</option>
-            <option value="Pro-shows">Pro-shows</option>
-        </select>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" for="photo">Photo *:</label>
-        <input required class="form-control" type="file" name="photo" id="photo" required>
-    </div>
+    
 
     <button type="sumbit"> SUBMIT </button>
 </form>
