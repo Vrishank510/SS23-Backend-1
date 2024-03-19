@@ -31,15 +31,11 @@ router.post("/add", upload.single("photo"), async (req, res) => {
         sponsor["photo"] = result.url;
 
         const newSponsor = new Sponsor(sponsor)
-        newSponsor.save((err, e) => {
-            if (err) {
-                return res.status(400).json({
-                    err_msg: err,
-                    err: "NOT able to save Event in DB",
-                });
-            }
-            return res.send("thank you");
-        });
+        const err = await newSponsor.save();
+        console.log({ err })
+
+        return res.send("thank you");
+
     }
     catch (err) {
         console.log(err);
@@ -51,8 +47,8 @@ router.post("/add", upload.single("photo"), async (req, res) => {
 const getAll = async (req, res) => {
     try {
         const sponsors = await Sponsor.find();
-         console.log(sponsors);
-         res.json(sponsors);
+        console.log(sponsors);
+        res.json(sponsors);
     } catch (err) {
         console.log(err);
         res.send("server error");

@@ -24,6 +24,7 @@ mongoose
 
 app.use(express.json());
 app.use(cookieParser());
+app.set('view engine', 'ejs');
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -36,16 +37,25 @@ if (process.env.ADMIN) {
   app.get("/addPromoCode", (req, res) => {
     res.render("addPromoCode", {});
   })
-  
+
   app.set('views', path.join(__dirname, 'views'));
+  app.use('/admin/sponsor', sponsor);
+  app.use('/admin/team', team);
 } else {
   // really sorry for this lol
-  app.get("/user/:email", getUser);
-  app.post("/oauth", Oauth);
+  app.get("/api/user/:email", getUser);
+  app.post("/api/oauth", Oauth);
 
-  app.get("/sponsor", sponsor.getAll)
-  app.get("/team", team.getAll);
+  app.get("/api/sponsor", sponsor.getAll)
+  app.get("/api/team", team.getAll);
 }
 app.listen(process.env.PORT || 5000, () => {
   console.log("Started at 5000");
-})
+});
+
+(async () => {
+  const Sponsor = require("./models/sponsor");
+  const Team = require("./models/team");
+  const res = await Sponsor.collection.drop();
+  console.log({ res })
+})()
