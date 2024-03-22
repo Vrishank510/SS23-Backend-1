@@ -2,8 +2,6 @@ var express = require("express");
 var router = express.Router();
 const Team = require("../models/team");
 const upload = require("../utils/upload");
-const uploadToCloudinary = require("../utils/cloudinaryUpload");
-const csvtojson = require('csvtojson');
 
 router.get("/", (req, res) => {
     res.render('team');

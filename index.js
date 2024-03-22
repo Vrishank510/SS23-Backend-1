@@ -54,10 +54,3 @@ if (process.env.ADMIN) {
 app.listen(process.env.PORT || 5000, () => {
   console.log("Started at 5000");
 });
-
-(async () => {
-  const Sponsor = require("./models/sponsor");
-  const Team = require("./models/team");
-  const res = await Sponsor.collection.drop();
-  console.log({ res })
-})()
