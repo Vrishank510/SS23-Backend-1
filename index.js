@@ -50,7 +50,12 @@ if (process.env.ADMIN) {
   app.get("/api/sponsor", sponsor.getAll)
   app.get("/api/team", team.getAll);
   app.get("/api/event", events.getAll);
+  app.use(
+    "/api/media", express.static(__dirname + "/pdfs")
+  )
 }
 app.listen(process.env.PORT || 5000, () => {
   console.log("Started at 5000");
 });
+
+
